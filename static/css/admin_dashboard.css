@@ -1568,3 +1568,5 @@
         flex-direction: column;
     }
 }
+
+.empty-state .empty-art { display: block; margin: 0 auto 1rem; height: auto; max-width: 100%; }

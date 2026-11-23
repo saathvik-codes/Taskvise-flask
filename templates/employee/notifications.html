@@ -210,6 +210,7 @@
     color: #64748b;
 }
 
+.empty-art { display: block; margin: 0 auto 1rem; height: auto; max-width: 100%; }
 .empty-state i {
     font-size: 2rem;
     margin-bottom: 12px;
@@ -298,7 +299,7 @@
         if (!items.length) {
             root.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-bell-slash"></i>
+                    <img class="empty-art" src="{{ url_for('static', filename='img/tv-done.webp') }}" alt="" width="220" height="165">
                     <h3>No notifications found</h3>
                     <p class="empty-subtext">Assignments, project updates, and system alerts will appear here.</p>
                 </div>

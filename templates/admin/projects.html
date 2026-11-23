@@ -111,7 +111,7 @@
             {% endfor %}
         {% else %}
             <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-project-diagram"></i></div>
+                <img class="empty-art" src="{{ url_for('static', filename='img/tv-empty-board.webp') }}" alt="" width="260" height="182">
                 <h3>No Projects Found</h3>
                 <p>Create your first project to get started.</p>
                 <button class="btn btn-primary" onclick="createProjectDialog.open()">
