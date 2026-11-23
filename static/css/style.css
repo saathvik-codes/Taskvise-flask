@@ -2201,3 +2201,6 @@ select.form-input:focus {
     right: 0.45rem;
   }
 }
+
+/* Scroll-in animations and decorative layers must never create a sideways scrollbar */
+html, body { overflow-x: clip; max-width: 100%; }
