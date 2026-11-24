@@ -7,22 +7,22 @@ This project is lightweight and portable for **academic projects, hackathons, an
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-- 🔐 Secure authentication with role-based access
-- 👥 Multiple user roles (Manager, Team Lead, Employee)
-- 📁 Project creation and management
-- ✅ Task assignment and tracking
-- ⚖️ Workload balancing & monitoring
-- 🧠 Skill-based task recommendations
-- 🕒 Work time tracking
-- 🌴 Leave management system
-- 📝 Team notes & announcements
-- 📊 Reports and productivity insights
+- Secure authentication with role-based access
+- Multiple user roles (Manager, Team Lead, Employee)
+- Project creation and management
+- Task assignment and tracking
+- Workload balancing & monitoring
+- Skill-based task recommendations
+- Work time tracking
+- Leave management system
+- Team notes & announcements
+- Reports and productivity insights
 
 ---
 
-## 🧑‍💼 User Roles
+## User Roles
 
 ### 1. Manager
 - Create and manage projects
@@ -43,7 +43,7 @@ This project is lightweight and portable for **academic projects, hackathons, an
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Backend:** Flask (Python)
 - **Frontend:** HTML, CSS, JavaScript (Jinja Templates)
