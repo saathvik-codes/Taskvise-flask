@@ -3979,22 +3979,23 @@ def signup():
             print(f"Error saving account data: {e}")
             return render_template('signup.html', error=f'Error saving data: {e}')
 
-        return redirect(url_for('show_credentials',
-                              employee_id=user_id,
-                              employee_name=full_name,
-                              username=email,
-                              password=password,
-                              role=role))
+        # Shown once on the next page; kept out of the URL so it never lands in history or server logs.
+        session['new_credentials'] = {
+            'employee_id': user_id, 'employee_name': full_name,
+            'username': email, 'password': password, 'role': role,
+        }
+        return redirect(url_for('show_credentials'))
 
     return render_template('signup.html')
 
 @app.route('/credentials')
 def show_credentials():
-    employee_id = request.args.get('employee_id', '')
-    employee_name = request.args.get('employee_name', '')
-    username = request.args.get('username', '')
-    password = request.args.get('password', '')
-    role = request.args.get('role', 'employee')
+    creds = session.pop('new_credentials', None) or {}
+    employee_id = creds.get('employee_id', '')
+    employee_name = creds.get('employee_name', '')
+    username = creds.get('username', '')
+    password = creds.get('password', '')
+    role = creds.get('role', 'employee')
 
     if not all([employee_name, username, password]):
         return redirect(url_for('signup'))
