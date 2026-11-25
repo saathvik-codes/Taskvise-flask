@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .env
 static/uploads/
+
+# user uploads and generated demo credentials never belong in git
+static/uploads/
+data/login_credentials.txt
