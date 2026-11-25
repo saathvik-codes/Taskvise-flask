@@ -136,15 +136,13 @@ SMTP_USE_TLS = os.environ.get(
 
 SYSTEM_SETTINGS_USER_ID = "__system__"
 DEFAULT_COMPANY_NAME = "TaskVise HyperScale Operations Consortium"
-PLATFORM_FOUNDER_EMAIL = os.environ.get("TASKVISE_FOUNDER_EMAIL", "saathvikk202@gmail.com").strip() or "saathvikk202@gmail.com"
-ROLE_DEFAULT_PASSWORDS = {
-    "platform_admin": "saathvik@2026",
-    "admin": "admin123",
-    "manager": "manager123",
-    "hr": "hr123",
-    "teamlead": "lead123",
-    "employee": "emp123",
-}
+# Founder (platform admin) comes from the environment only; nothing is baked into the source.
+PLATFORM_FOUNDER_EMAIL = os.environ.get("TASKVISE_FOUNDER_EMAIL", "").strip()
+PLATFORM_FOUNDER_PASSWORD = os.environ.get("TASKVISE_FOUNDER_PASSWORD", "")
+# Demo organisation (sample users, teams, projects) is a local-development aid. It never runs on the hosted site.
+SEED_DEMO = os.environ.get("TASKVISE_SEED_DEMO", "").strip().lower() in {"1", "true", "yes", "on"} and not os.environ.get("VERCEL")
+_DEMO_PASSWORD = os.environ.get("TASKVISE_DEMO_PASSWORD", "")
+ROLE_DEFAULT_PASSWORDS = {role: _DEMO_PASSWORD for role in ("platform_admin", "admin", "manager", "hr", "teamlead", "employee")}
 WORKFORCE_ID_PREFIX = "EMP"
 WORKFORCE_ID_WIDTH = 3
 PROJECT_ID_PREFIX = "PRJ"
@@ -819,6 +817,8 @@ GOOGLE_REDIRECT_URI = os.environ.get(
 
 def create_sample_users():
     """Create sample users for testing"""
+    if not SEED_DEMO:
+        return
     reset_passwords = os.environ.get('TASKVISE_RESET_SAMPLE_PASSWORDS', '').strip().lower() in {'1', 'true', 'yes', 'on'}
     sample_users = [
         {
@@ -1441,6 +1441,8 @@ def build_demo_credentials_payload(users=None):
     return grouped
 
 def export_demo_credentials_file(path=CREDENTIALS_EXPORT_TXT, users=None):
+    if not SEED_DEMO:
+        return
     role_labels = {
         'platform_admin': 'TaskVise Founder',
         'admin': 'Admin',
@@ -1491,6 +1493,8 @@ def export_demo_credentials_file(path=CREDENTIALS_EXPORT_TXT, users=None):
     return path
 
 def sync_demo_role_passwords():
+    if not SEED_DEMO:
+        return
     users = read_csv(USERS_CSV)
     if not users:
         export_demo_credentials_file(users=[])
@@ -2252,6 +2256,8 @@ def _salary_for_role(role):
 
 
 def ensure_platform_admin_account():
+    if not (PLATFORM_FOUNDER_EMAIL and PLATFORM_FOUNDER_PASSWORD):
+        return None
     users = read_csv(USERS_CSV)
     existing = next((row for row in users if normalize_role(row.get('role')) == 'platform_admin'), None)
     if existing:
@@ -2260,8 +2266,8 @@ def ensure_platform_admin_account():
             existing['username'] = PLATFORM_FOUNDER_EMAIL
             updated = True
         password_hash = str(existing.get('password_hash') or '').strip()
-        if not password_hash or not check_password_hash(password_hash, get_role_default_password('platform_admin')):
-            existing['password_hash'] = generate_password_hash(get_role_default_password('platform_admin'))
+        if not password_hash or not check_password_hash(password_hash, PLATFORM_FOUNDER_PASSWORD):
+            existing['password_hash'] = generate_password_hash(PLATFORM_FOUNDER_PASSWORD)
             updated = True
         if str(existing.get('full_name') or '').strip() != 'TaskVise Founder':
             existing['full_name'] = 'TaskVise Founder'
@@ -2276,7 +2282,7 @@ def ensure_platform_admin_account():
     row = {
         'id': 'TVA001',
         'username': PLATFORM_FOUNDER_EMAIL,
-        'password_hash': generate_password_hash(get_role_default_password('platform_admin')),
+        'password_hash': generate_password_hash(PLATFORM_FOUNDER_PASSWORD),
         'full_name': 'TaskVise Founder',
         'role': 'platform_admin',
         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -2287,6 +2293,9 @@ def ensure_platform_admin_account():
 
 
 def ensure_demo_org_integrity(force=False):
+    if not SEED_DEMO:
+        ensure_platform_admin_account()
+        return
     global _ORG_STRUCTURE_BOOTSTRAPPED
     if _ORG_STRUCTURE_BOOTSTRAPPED and not force:
         return
