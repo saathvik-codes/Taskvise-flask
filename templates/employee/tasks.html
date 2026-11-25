@@ -573,8 +573,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 /* Quick filters */
 .quick-filters { display:flex; gap:.5rem; margin:0 0 1rem; }
-.qf-link { padding:.35rem .65rem; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none; color:#334155; font-weight:500; background:#fff; }
-.qf-link:hover { background:#f8fafc; }
+.qf-link { padding:.35rem .65rem; border:1px solid #ffedd5; border-radius:8px; text-decoration:none; color:#334155; font-weight:500; background:#fff; }
+.qf-link:hover { background:#f7f6f3; }
 
 /* Filters grid + search */
 .filters-grid { display:grid; grid-template-columns: 1fr repeat(3, 180px); gap:.75rem; align-items:center; }
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .search-input-wrap { position: relative; width: 100%; }
 .search-input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; pointer-events: none; z-index: 1; }
 .search-input { width: 100%; padding: 10px 12px 10px 40px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; outline:none; }
-.search-input:focus { border-color:#3b82f6; box-shadow: none; }
+.search-input:focus { border-color:#ea580c; box-shadow: none; }
 
 @media (max-width: 768px) {
   .filters-grid { grid-template-columns: 1fr; }
@@ -595,13 +595,13 @@ document.addEventListener('DOMContentLoaded', function() {
   margin: 1.25rem 0 1.5rem;
   padding: 1.25rem;
   background: none;
-  border:1px solid #e2e8f0;
+  border:1px solid #ffedd5;
   border-radius: 18px;
 }
 
 .submission-copy h3 {
   margin:0 0 .45rem;
-  color:#0f172a;
+  color:#1e293b;
 }
 
 .submission-copy p {
@@ -631,13 +631,13 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .submission-dropzone.dragover {
-  border-color:#2563eb;
-  background:#eff6ff;
+  border-color:#c2410c;
+  background:#f7f6f3;
 }
 
 .submission-dropzone-title {
   font-weight:700;
-  color:#0f172a;
+  color:#1e293b;
 }
 
 .submission-dropzone-subtitle,
@@ -673,12 +673,12 @@ document.addEventListener('DOMContentLoaded', function() {
   gap:1rem;
   padding:.9rem 1rem;
   background:#fff;
-  border:1px solid #e2e8f0;
+  border:1px solid #ffedd5;
   border-radius:12px;
 }
 
 .submission-item strong {
-  color:#0f172a;
+  color:#1e293b;
 }
 
 .submission-item p {
@@ -693,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .submission-item-meta a {
-  color:#2563eb;
+  color:#c2410c;
   font-weight:600;
   text-decoration:none;
 }

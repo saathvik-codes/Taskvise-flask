@@ -58,3 +58,65 @@ tr.tv-more { display: none !important; }
 .search-input { width: 100%; height: 2.6rem; padding: 0 .9rem 0 2.4rem; background: #fff; border: 1px solid #cfcdc6; border-radius: 10px; }
 .search-input:focus-visible { border-color: var(--tv-orange); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-orange) 20%, transparent); outline: none; }
 .search-input-icon { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%); color: var(--tv-muted); pointer-events: none; }
+
+/* ---- consistency layer: one page rhythm for every role ---- */
+.content-area { margin: 0 !important; padding: clamp(1rem, 2.2vw, 2rem) !important; border-radius: 0 !important; box-shadow: none !important; background: var(--tv-paper) !important; }
+.content-header { background: #fff !important; border-bottom: 1px solid var(--tv-line) !important; }
+.view-content { display: grid; gap: 1.25rem; align-content: start; max-width: 80rem; }
+.view-content > h1, .view-content h1, .page-title, .content-header h1, .content-header h2 { font: 700 1.5rem/1.2 var(--tv-display) !important; letter-spacing: -.015em; color: var(--tv-ink); margin: 0; text-align: left; }
+.view-content > p, .page-subtitle, .content-header p { color: var(--tv-muted); font-size: .92rem; margin: .2rem 0 0; text-align: left; }
+
+/* panels: same flat card, same header */
+.card, .panel, .dashboard-card, .settings-card, .profile-card, .info-card { background: #fff !important; border: 1px solid var(--tv-line) !important; border-radius: 12px !important; box-shadow: none !important; }
+.card-header { background: transparent !important; border-bottom: 1px solid var(--tv-line) !important; padding: .9rem 1.1rem !important; display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.card-title, .card-header h2, .card-header h3 { font: 700 1rem/1.3 var(--tv-display) !important; color: var(--tv-ink); margin: 0; display: flex; align-items: center; gap: .5rem; }
+.card-title i, .card-title svg { color: var(--tv-orange); }
+.card-content, .card-body { padding: 1.1rem !important; }
+.grid-2-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1.25rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: 1rem; }
+
+/* form controls: one look everywhere */
+input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea { font: inherit; color: var(--tv-ink); background: #fff; border: 1px solid #cfcdc6; border-radius: 10px; padding: .55rem .75rem; min-height: 2.6rem; max-width: 100%; }
+textarea { min-height: 5.5rem; }
+input:disabled, select:disabled, textarea:disabled, input[readonly] { background: #f2f1ed; color: var(--tv-slate); }
+input:focus-visible, select:focus-visible, textarea:focus-visible { border-color: var(--tv-orange); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-orange) 20%, transparent); outline: none; }
+label { font-weight: 600; font-size: .85rem; color: var(--tv-slate); }
+input[type=checkbox], input[type=radio], input[type=range] { accent-color: var(--tv-orange); }
+.form-grid, .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+
+/* filters row */
+.filters, .filter-bar, .action-bar, .toolbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; background: #fff; border: 1px solid var(--tv-line) !important; border-radius: 12px; padding: .75rem; }
+.filters select, .filter-bar select, .action-bar select { width: auto; min-width: 10rem; flex: 0 1 12rem; }
+
+/* buttons */
+.btn, button.btn, .btn-primary, .btn-secondary, .btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 2.5rem; padding: 0 1rem; border-radius: 10px; font: 600 .9rem var(--tv-body, inherit); cursor: pointer; border: 1px solid transparent; text-decoration: none; }
+.btn-primary { background: var(--tv-orange) !important; color: #fff !important; border-color: var(--tv-orange) !important; }
+.btn-primary:hover { background: color-mix(in srgb, var(--tv-orange) 88%, black) !important; }
+.btn-secondary, .btn-outline { background: #fff !important; color: var(--tv-ink) !important; border-color: #cfcdc6 !important; }
+.btn-secondary:hover, .btn-outline:hover { border-color: #b9b6ad !important; }
+
+/* status chips and skill tags: calm, not neon */
+.badge, .tag, .skill-tag, .status-badge, [class*="badge-"], [class*="status-"] { border-radius: 6px; font-weight: 600; font-size: .75rem; padding: .15rem .55rem; }
+.skill-tag, .tag { background: #ffedd5 !important; color: #9a3412 !important; border: 0 !important; }
+
+/* tables */
+table { width: 100%; }
+table th, table td { padding: .65rem .8rem; text-align: left; }
+.table-container, .table-wrap, div:has(> table) { border: 0; }
+.empty-state { text-align: center; padding: 2rem 1rem; color: var(--tv-muted); }
+.empty-state .btn { margin-top: .75rem; }
+
+/* sidebar: same active state in every role */
+.sidebar .nav-item.active, .sidebar a.active, .nav-link.active { background: #ffedd5 !important; color: #9a3412 !important; font-weight: 600; }
+
+/* settings pages stop centring a giant title */
+.settings-header, .settings-title, .settings-container > h1 { text-align: left !important; font-size: 1.5rem !important; }
+@media (max-width: 760px) { .content-header { padding: .75rem 1rem !important; } .content-area { padding: 1rem !important; } }
+
+/* leftovers */
+.logo, .navbar .logo, header .logo { background: var(--tv-orange) !important; }
+.skill-badge, .skills-list > span { background: #ffedd5 !important; color: #9a3412 !important; border: 0 !important; }
+.search-input { padding-left: 2.5rem !important; }
+.card:has(> .card-content > table), .card:has(> table), .table-card { overflow-x: auto; }
+table td .btn, table td button { white-space: nowrap; }
+table td:last-child { white-space: nowrap; }
