@@ -9,6 +9,8 @@ import json
 import re
 import smtplib
 import ssl
+import threading
+import time
 from datetime import datetime, timedelta
 from urllib import parse, request as urllib_request, error as urllib_error
 
@@ -437,6 +439,63 @@ def _mysql_column_type(column_name):
     return "VARCHAR(255)"
 
 
+class _PooledConnection:
+    """One live connection per thread. close() keeps it open and only rolls back if something was written but not committed.
+
+    Reads use READ COMMITTED, so a connection that stays open still sees other writers' data without a round trip."""
+
+    _WRITE = re.compile(r"\s*(INSERT|UPDATE|DELETE|REPLACE|ALTER|CREATE|DROP|TRUNCATE)", re.I)
+
+    def __init__(self, raw):
+        self._raw = raw
+        self._dirty = False
+        self._last_used = time.time()
+
+    def _is_write(self, sql):
+        if isinstance(sql, (bytes, bytearray)):
+            sql = sql.decode("utf-8", "ignore")
+        return bool(self._WRITE.match(sql))
+
+    def cursor(self, *args, **kwargs):
+        cur = self._raw.cursor(*args, **kwargs)
+        execute, executemany = cur.execute, cur.executemany
+
+        def run(sql, *a, **k):
+            if self._is_write(sql):
+                self._dirty = True
+            return execute(sql, *a, **k)
+
+        def run_many(sql, *a, **k):
+            if self._is_write(sql):
+                self._dirty = True
+            return executemany(sql, *a, **k)
+
+        cur.execute, cur.executemany = run, run_many
+        return cur
+
+    def commit(self):
+        self._raw.commit()
+        self._dirty = False
+
+    def rollback(self):
+        self._raw.rollback()
+        self._dirty = False
+
+    def close(self):
+        self._last_used = time.time()
+        if self._dirty:
+            try:
+                self.rollback()
+            except Exception:
+                pass
+
+    def __getattr__(self, name):
+        return getattr(self._raw, name)
+
+
+_mysql_local = threading.local()
+
+
 def _mysql_connect(include_database=True):
     if mysql is None:
         raise RuntimeError("mysql-connector-python is not available")
@@ -447,9 +506,27 @@ def _mysql_connect(include_database=True):
         "password": MYSQL_PASSWORD,
         "connection_timeout": int(os.environ.get("MYSQL_CONNECTION_TIMEOUT", "3")),
     }
-    if include_database:
-        config["database"] = MYSQL_DATABASE
-    return mysql.connector.connect(**config)
+    if not include_database:
+        return mysql.connector.connect(**config)
+    config["database"] = MYSQL_DATABASE
+    # Reuse one connection per thread: opening a TLS connection per query made every page take many seconds.
+    pooled = getattr(_mysql_local, "conn", None)
+    if pooled is not None:
+        try:
+            if time.time() - pooled._last_used > 20:  # only check a connection that has been idle a while
+                pooled._raw.ping(reconnect=True, attempts=2, delay=0)
+            return pooled
+        except Exception:
+            _mysql_local.conn = None
+    raw = mysql.connector.connect(**config)
+    try:
+        cur = raw.cursor()
+        cur.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        cur.close()
+    except Exception:
+        pass  # a server that refuses it still works, just with snapshot reads
+    _mysql_local.conn = _PooledConnection(raw)
+    return _mysql_local.conn
 
 
 def _mysql_ensure_database():
@@ -533,6 +610,27 @@ def _mysql_ensure_columns(table_name, columns):
         conn.close()
 
 
+def _mysql_schema_complete():
+    try:
+        conn = _mysql_connect(include_database=True)
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema = %s", (MYSQL_DATABASE,))
+            have = {}
+            for table, column in cur.fetchall():
+                have.setdefault(str(table).lower(), set()).add(str(column).lower())
+            cur.close()
+        finally:
+            conn.close()
+        for table_name, columns in MYSQL_DEFAULT_COLUMNS.items():
+            needed = {c.lower() for c in (_collect_fieldnames([], columns) or ["id"])} | {"id"}
+            if not needed <= have.get(table_name.lower(), set()):
+                return False
+        return True
+    except Exception:
+        return False
+
+
 def _mysql_bootstrap():
     global _MYSQL_BOOTSTRAPPED, _MYSQL_ENABLED
     if not _MYSQL_ENABLED:
@@ -541,6 +639,11 @@ def _mysql_bootstrap():
         return True
 
     try:
+        # Fast path: one query tells us whether every table and column already exists (the usual case after the
+        # first run), so a restart does not repeat a dozen CREATE/ALTER round trips.
+        if _mysql_schema_complete():
+            _MYSQL_BOOTSTRAPPED = True
+            return True
         _mysql_ensure_database()
         for table_name, columns in MYSQL_DEFAULT_COLUMNS.items():
             _mysql_ensure_table(table_name, columns)
