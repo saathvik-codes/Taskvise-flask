@@ -1,165 +1,57 @@
-{% extends "base.html" %}
-{% block extra_head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Schibsted+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-{% endblock %}
-{% block content %}
-<div class="app-container auth-container">
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">
-        <div class="logo">
-          <img src="{{ url_for('static', filename='taskvise-logo.svg') }}" alt="TaskVise" class="site-logo">
-        </div>
-        <span class="brand-text">TaskVise</span>
-      </div>
-      <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      <div class="nav-actions">
-        <a class="nav-btn secondary" href="{{ url_for('landing') }}" target="_top">
-          Back to Home
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create your account - TaskVise</title>
+  <meta name="theme-color" content="#f7f6f3">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tv_auth.css') }}">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="{{ url_for('landing') }}"><img src="{{ url_for('static', filename='apple-touch-icon.png') }}" alt="" width="28" height="28" style="border-radius:7px">TaskVise</a>
+    <a class="back" href="{{ url_for('landing') }}">Back to home</a>
+  </header>
+  <main class="stage">
+    <img class="flank flank-l" src="{{ url_for('static', filename='illustrations/tv-auth-signup.webp') }}" alt="" width="640" height="640" onerror="this.hidden=true">
+    <section class="card">
+      <h1>Create your account</h1>
+      <p class="lede">Three short steps and you are in.</p>
+      <ol class="stepper" aria-label="Progress"><li aria-current="step">You</li><li>Your role</li><li>Skills</li></ol>
+      {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+      <form method="POST" action="{{ url_for('signup') }}" target="_top" id="signupForm">
+        <fieldset class="step">
+          <label class="field"><span>Full name</span>
+            <input type="text" name="fullName" autocomplete="name" placeholder="Asha Verma" required autofocus></label>
+          <label class="field"><span>Work email</span>
+            <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@company.com" required></label>
+          <label class="field"><span>Phone</span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
+          <div class="actions"><button class="btn btn-primary" type="button" data-next>Continue</button></div>
+          <div class="or">or</div>
+          <a class="btn btn-ghost" href="{{ url_for('google_login') }}" target="_top">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.56c2.08-1.92 3.28-4.74 3.28-8.1Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.2 1.64l3.15-3.15A10.6 10.6 0 0 0 12 1 11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z"/></svg>
+          Continue with Google
         </a>
-      </div>
-    </div>
-  </nav>
+        </fieldset>
 
-  <div class="auth-layout">
-    <!-- Left Side - Admin Info -->
-    <div class="auth-welcome">
-      <div class="admin-info-card">
-        <div class="admin-icon">
-          <i class="fas fa-user-plus"></i>
-        </div>
-        <h2>Admin Portal</h2>
-        <p>Create and manage employee accounts with complete profile data</p>
-        
-        <div class="admin-features">
-          <div class="feature">
-            <i class="fas fa-check"></i>
-            <span>Complete profile storage</span>
-          </div>
-          <div class="feature">
-            <i class="fas fa-check"></i>
-            <span>Secure authentication</span>
-          </div>
-          <div class="feature">
-            <i class="fas fa-check"></i>
-            <span>Role-based access control</span>
-          </div>
-          <div class="feature">
-            <i class="fas fa-check"></i>
-            <span>Credentials shown after creation</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Side - Signup Form -->
-    <div class="auth-form-container">
-      <div class="auth-card">
-        <div class="auth-header">
-          <div class="auth-icon auth-logo-icon">
-            <img src="{{ url_for('static', filename='taskvise-logo.svg') }}" alt="TaskVise" class="site-logo">
-          </div>
-          <h2>Create Employee Account</h2>
-          <p>Enter employee details to create a complete profile</p>
-        </div>
-
-        <form method="POST" action="{{ url_for('signup') }}" target="_top" class="auth-form signup-form" id="signupForm">
-          {% if error %}
-          <div class="alert alert-error">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ error }}
-          </div>
-          {% endif %}
-          
-          {% if success %}
-          <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            {{ success }}
-          </div>
-          {% endif %}
-
-          <!-- Personal Information -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="fullName">
-                <i class="fas fa-user"></i>
-                Full Name *
-              </label>
-              <input 
-                type="text" 
-                id="fullName" 
-                name="fullName" 
-                placeholder="John Doe"
-                class="form-input"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label for="email">
-                <i class="fas fa-envelope"></i>
-                Email Address *
-              </label>
-              <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                placeholder="john@company.com"
-                class="form-input"
-                required
-              >
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="phone">
-                <i class="fas fa-phone"></i>
-                Phone Number *
-              </label>
-              <input 
-                type="tel" 
-                id="phone" 
-                name="phone" 
-                placeholder="1234567890"
-                pattern="[0-9]{10}"
-                class="form-input"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label for="role">
-                <i class="fas fa-user-tag"></i>
-                Role *
-              </label>
-              <select id="role" name="role" class="form-input" required>
+        <fieldset class="step">
+          <label class="field"><span>Role</span><select id="role" name="role" required>
                 <option value="">Select role</option>
                 <option value="admin">Admin</option>
                 <option value="manager">Manager</option>
                 <option value="hr">HR</option>
                 <option value="teamlead">Team Lead</option>
                 <option value="employee">Employee</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Professional Information -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="designation">
-                <i class="fas fa-briefcase"></i>
-                Designation *
-              </label>
-              <select id="designation" name="designation" class="form-input" required>
+              </select></label>
+          <label class="field"><span>Designation</span><select id="designation" name="designation" required>
                 <option value="">Select designation</option>
                 <option value="Software Engineer">Software Engineer</option>
                 <option value="Senior Software Engineer">Senior Software Engineer</option>
@@ -181,15 +73,8 @@
                 <option value="HR Specialist">HR Specialist</option>
                 <option value="Operations Manager">Operations Manager</option>
                 <option value="Finance Manager">Finance Manager</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="department">
-                <i class="fas fa-building"></i>
-                Department *
-              </label>
-              <select id="department" name="department" class="form-input" required>
+              </select></label>
+          <label class="field"><span>Department</span><select id="department" name="department" required>
                 <option value="">Select department</option>
                 <option value="Engineering">Engineering</option>
                 <option value="Product">Product</option>
@@ -206,125 +91,22 @@
                 <option value="Customer Support">Customer Support</option>
                 <option value="Legal">Legal</option>
                 <option value="IT">IT</option>
-              </select>
-            </div>
-          </div>
+              </select></label>
+          <div class="actions"><button class="btn btn-ghost" type="button" data-back>Back</button><button class="btn btn-primary" type="button" data-next>Continue</button></div>
+        </fieldset>
 
-          <!-- Skills Section -->
-          <div class="form-group skills-section">
-            <label>
-              <i class="fas fa-tools"></i>
-              Skills *
-            </label>
-            <div class="skills-input-container">
-              <div class="skills-input">
-                <div class="skills-input-row">
-                  <input 
-                    type="text" 
-                    id="skillInput" 
-                    placeholder="Add a skill (e.g., Python, React, Project Management)"
-                    class="form-input"
-                    onkeypress="if(event.key === 'Enter') {event.preventDefault(); addSkill();}"
-                  >
-                  <button type="button" class="skills-add-btn" onclick="addSkill()">
-                    <i class="fas fa-plus"></i>
-                    Add Skill
-                  </button>
-                </div>
-                <input type="hidden" id="skills" name="skills" required>
-                <div id="skillsList" class="skills-list"></div>
-                <div id="skillsError" class="error-message">
-                  <i class="fas fa-exclamation-circle"></i>
-                  At least one skill is required
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn">
-            <i class="fas fa-user-plus"></i>
-            Create Employee Account
-          </button>
-        </form>
-
-        <div class="auth-footer">
-          <p>Already have credentials?</p>
-          <a class="auth-link" href="{{ url_for('login') }}" target="_top">Sign in instead</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  let skills = [];
-
-  function addSkill() {
-    const skillInput = document.getElementById('skillInput');
-    const skill = skillInput.value.trim();
-    
-    if (skill && !skills.includes(skill)) {
-      skills.push(skill);
-      updateSkillsDisplay();
-      skillInput.value = '';
-      validateSkills();
-    }
-  }
-
-  function removeSkill(skillToRemove) {
-    skills = skills.filter(skill => skill !== skillToRemove);
-    updateSkillsDisplay();
-    validateSkills();
-  }
-
-  function updateSkillsDisplay() {
-    const skillsList = document.getElementById('skillsList');
-    const skillsInput = document.getElementById('skills');
-    
-    skillsList.innerHTML = '';
-    skillsInput.value = skills.join(',');
-    
-    skills.forEach(skill => {
-      const badge = document.createElement('div');
-      badge.className = 'skill-badge';
-      badge.innerHTML = `
-        ${skill}
-        <button type="button" onclick="removeSkill('${skill}')">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-      skillsList.appendChild(badge);
-    });
-  }
-
-  function validateSkills() {
-    const skillsError = document.getElementById('skillsError');
-    if (skills.length === 0) {
-      skillsError.style.display = 'flex';
-      return false;
-    } else {
-      skillsError.style.display = 'none';
-      return true;
-    }
-  }
-
-  // Form validation
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
-    if (!validateSkills()) {
-      e.preventDefault();
-      return false;
-    }
-    return true;
-  });
-
-  // Initialize AOS
-  document.addEventListener('DOMContentLoaded', function() {
-    if (typeof AOS !== 'undefined') {
-      AOS.init({
-        duration: 800,
-        once: true
-      });
-    }
-  });
-</script>
-{% endblock %}
+        <fieldset class="step">
+          <label class="field"><span>Skills</span>
+            <span class="chips"><input type="text" placeholder="Type a skill, press Enter" aria-label="Add a skill" autocomplete="off"></span>
+            <span class="hint">Press Enter or comma after each one. We use them to match you to tasks.</span></label>
+          <input type="hidden" id="skills" name="skills" required>
+          <div class="actions"><button class="btn btn-ghost" type="button" data-back>Back</button><button class="btn btn-primary" type="submit">Create account</button></div>
+        </fieldset>
+      </form>
+      <p class="switch">Already have an account? <a href="{{ url_for('login') }}" target="_top">Sign in</a></p>
+    </section>
+    <img class="flank flank-r" src="{{ url_for('static', filename='illustrations/tv-carousel-team.webp') }}" alt="" width="640" height="640" onerror="this.hidden=true">
+  </main>
+  <script src="{{ url_for('static', filename='js/tv_auth.js') }}" defer></script>
+</body>
+</html>

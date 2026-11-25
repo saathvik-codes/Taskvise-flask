@@ -200,12 +200,12 @@
                     </button>
                     {% endif %}
                 </div>
-                <div class="workload-message" style="margin-top: 1rem; font-size: 0.875rem; color: #6b7280;">
+                <div class="workload-message" style="margin-top: 1rem; font-size: 0.875rem; color: #6b7280">
                     {{ 'People Desk:' if is_hr else 'Team Status:' }}
                     {% if (stats.activeEmployees or 0) > 0 %}
-                    <span style="color: #10b981; font-weight: 600;">Active</span>
+                    <span style="color: #10b981; font-weight: 600">Active</span>
                     {% else %}
-                    <span style="color: #f59e0b; font-weight: 600;">Idle</span>
+                    <span style="color: #f59e0b; font-weight: 600">Idle</span>
                     {% endif %}
                 </div>
             </div>
@@ -469,9 +469,9 @@ function showNotification(message, type = 'info') {
         if (type === 'warning') notification.style.borderLeftColor = '#f59e0b';
         
         notification.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start">
                 <span>${message}</span>
-                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; padding: 0; margin-left: 12px;">×</button>
+                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; padding: 0; margin-left: 12px">×</button>
             </div>
         `;
         

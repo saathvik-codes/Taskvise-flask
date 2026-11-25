@@ -401,10 +401,10 @@ function getUrgencyClass(urgency) {
   color: white;
 }
 
-.stat-icon.critical { background: linear-gradient(135deg, #ef4444, #dc2626); }
-.stat-icon.training { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
-.stat-icon.completed { background: linear-gradient(135deg, #10b981, #047857); }
-.stat-icon.productivity { background: linear-gradient(135deg, var(--accent-secondary), var(--accent-secondary-dark)); }
+.stat-icon.critical { background: #ef4444; }
+.stat-icon.training { background: var(--gradient-start); }
+.stat-icon.completed { background: #10b981; }
+.stat-icon.productivity { background: var(--accent-secondary); }
 
 .stat-content {
   flex: 1;
@@ -541,7 +541,7 @@ function getUrgencyClass(urgency) {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  background: var(--gradient-start);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -671,7 +671,7 @@ function getUrgencyClass(urgency) {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  background: var(--gradient-start);
   border-radius: 3px;
   transition: width 0.3s ease;
 }

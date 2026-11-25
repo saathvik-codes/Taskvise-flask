@@ -88,7 +88,7 @@
             <div class="stat-footer">
                 <div class="progress-container">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: {{ stats.productivity }}%;"></div>
+                        <div class="progress-fill" style="width: {{ stats.productivity }}%"></div>
                     </div>
                 </div>
                 <div class="stat-trend up">+3.8%</div>
@@ -554,10 +554,10 @@
     height: 4px;
 }
 
-.stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end)); }
-.stat-card:nth-child(2)::before { background: linear-gradient(90deg, #10b981, #047857); }
-.stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--accent-secondary), var(--accent-secondary-dark)); }
-.stat-card:nth-child(4)::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.stat-card:nth-child(1)::before { background: var(--gradient-start); }
+.stat-card:nth-child(2)::before { background: #10b981; }
+.stat-card:nth-child(3)::before { background: var(--accent-secondary); }
+.stat-card:nth-child(4)::before { background: #f59e0b; }
 
 .stat-main {
     display: flex;
@@ -577,10 +577,10 @@
     flex-shrink: 0;
 }
 
-.stat-icon.blue { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
-.stat-icon.green { background: linear-gradient(135deg, #10b981, #047857); }
-.stat-icon.purple { background: linear-gradient(135deg, var(--accent-secondary), var(--accent-secondary-dark)); }
-.stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-icon.blue { background: var(--gradient-start); }
+.stat-icon.green { background: #10b981; }
+.stat-icon.purple { background: var(--accent-secondary); }
+.stat-icon.orange { background: #f59e0b; }
 
 .stat-content {
     flex: 1;
@@ -668,7 +668,7 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #f97316);
+    background: #f59e0b;
     border-radius: 3px;
     transition: width 0.3s ease;
 }
@@ -844,7 +844,7 @@
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: var(--gradient-start);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -896,15 +896,15 @@
 }
 
 .hr-role-tile.primary {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: var(--gradient-start);
 }
 
 .hr-role-tile.secondary {
-    background: linear-gradient(135deg, var(--accent-secondary), var(--accent-secondary-dark));
+    background: var(--accent-secondary);
 }
 
 .hr-role-tile.neutral {
-    background: linear-gradient(135deg, #475569, #334155);
+    background: #475569;
 }
 
 .hr-role-value {

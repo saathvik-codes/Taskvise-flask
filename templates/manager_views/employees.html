@@ -128,7 +128,7 @@
         {% endfor %}
     </div>
 
-    <div class="empty-state filtered-empty" id="manager-employee-filter-empty" style="display:none;">
+    <div class="empty-state filtered-empty" id="manager-employee-filter-empty" style="display:none">
         <div class="empty-icon">
             <i class="fas fa-filter fa-3x"></i>
         </div>
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .form-select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14);
+    box-shadow: none;
 }
 
 .employees-grid {
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 58px;
     height: 58px;
     border-radius: 16px;
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: var(--gradient-start);
     color: #fff;
     display: flex;
     align-items: center;
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    background: var(--gradient-start);
     border-radius: inherit;
 }
 

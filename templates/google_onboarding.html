@@ -7,8 +7,8 @@
 {% block content %}
 <div class="app-container auth-container">
   <div class="auth-layout">
-    <div class="auth-form-container" style="max-width:540px; width:100%; margin:auto;">
-      <div class="auth-card" style="padding:2rem;">
+    <div class="auth-form-container" style="max-width:540px; width:100%; margin:auto">
+      <div class="auth-card" style="padding:2rem">
         <div class="auth-header">
           <div class="auth-icon auth-logo-icon">
             <img src="{{ url_for('static', filename='taskvise-logo.svg') }}" alt="TaskVise" class="site-logo">
@@ -18,7 +18,7 @@
         </div>
 
         {% if error %}
-        <div class="alert alert-error" style="margin-bottom:1rem;">
+        <div class="alert alert-error" style="margin-bottom:1rem">
           <i class="fas fa-exclamation-circle"></i> {{ error }}
         </div>
         {% endif %}
@@ -51,8 +51,8 @@
         <input id="skills" name="skills" type="text" class="form-input" placeholder="e.g. Python, SQL, Management" required>
       </div>
 
-      <button type="submit" class="submit-btn" style="width:100%;">Save and Continue</button>
-      <a href="{{ url_for('login') }}" class="btn btn-outline" style="width:100%; margin-top: 0.5rem; display:block; text-align:center;">Cancel</a>
+      <button type="submit" class="submit-btn" style="width:100%">Save and Continue</button>
+      <a href="{{ url_for('login') }}" class="btn btn-outline" style="width:100%; margin-top: 0.5rem; display:block; text-align:center">Cancel</a>
     </form>
   </div>
 </div>

@@ -305,7 +305,7 @@ function openProjectDetails(projectId) {
                             ${teamMembers.map(member => `<span class="team-member-chip">${member}</span>`).join('')}
                         </div>
                     ` : `
-                        <p style="text-align:center;color:#64748b;padding:2rem;">No team members mapped to this project yet.</p>
+                        <p style="text-align:center;color:#64748b;padding:2rem">No team members mapped to this project yet.</p>
                     `}
                 </div>
             </div>
@@ -393,7 +393,7 @@ function showNotification(message, type = 'info') {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e0ecff, #bfdbfe);
+    background: #e0ecff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -555,7 +555,7 @@ function showNotification(message, type = 'info') {
 
 .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    background: #3b82f6;
     border-radius: 999px;
     transition: width 0.5s ease;
 }

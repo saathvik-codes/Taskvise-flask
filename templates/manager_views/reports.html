@@ -192,7 +192,7 @@ async function loadReportsData() {
 
 function renderChart() {
     if (!employeePerformance || employeePerformance.length === 0) {
-        document.getElementById('performanceChart').innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b;">No employee data available</div>';
+        document.getElementById('performanceChart').innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b">No employee data available</div>';
         return;
     }
     
@@ -531,12 +531,12 @@ function showNotification(message, type = 'info') {
 }
 
 .productivity-bar {
-    background: linear-gradient(to top, var(--accent-secondary), var(--accent-secondary-dark));
+    background: var(--accent-secondary);
     box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.22);
 }
 
 .tasks-bar {
-    background: linear-gradient(to top, #82ca9d, #9cd8b3);
+    background: #82ca9d;
     box-shadow: 0 2px 8px rgba(130, 202, 157, 0.3);
 }
 
@@ -563,11 +563,11 @@ function showNotification(message, type = 'info') {
 }
 
 .legend-color.productivity {
-    background: linear-gradient(135deg, var(--accent-secondary), var(--accent-secondary-dark));
+    background: var(--accent-secondary);
 }
 
 .legend-color.completed-tasks {
-    background: linear-gradient(135deg, #82ca9d, #9cd8b3);
+    background: #82ca9d;
 }
 
 /* Stats Grid */
@@ -599,7 +599,7 @@ function showNotification(message, type = 'info') {
     width: 60px;
     height: 60px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--gradient-start), var(--accent-secondary));
+    background: var(--gradient-start);
     display: flex;
     align-items: center;
     justify-content: center;

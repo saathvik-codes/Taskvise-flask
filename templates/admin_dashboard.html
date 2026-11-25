@@ -181,7 +181,7 @@
 </div>
 
 <!-- Toast Container -->
-<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 10000"></div>
 
 <!-- Include JavaScript -->
 <script id="initial-admin-data" type="application/json">{{ ( {'employees': employees or [], 'projects': projects or [], 'tasks': tasks or [], 'stats': stats or {}, 'current_user_id': session.get('user_id'), 'system_settings': system_settings or {}} )|tojson|safe }}</script>
@@ -263,9 +263,9 @@ function showNotification(message, type = 'info') {
         if (type === 'warning') notification.style.borderLeftColor = '#f59e0b';
         
         notification.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start">
                 <span>${message}</span>
-                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; padding: 0; margin-left: 12px;">×</button>
+                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; padding: 0; margin-left: 12px">×</button>
             </div>
         `;
         

@@ -1,0 +1,60 @@
+/* TaskVise dashboards: shared polish, loaded last so it wins over the per-role stylesheets.
+   Paper, slate and one orange; flat panels; calm numbers; tidy tables. */
+:root {
+  --tv-paper: #f7f6f3;
+  --tv-line: #e2e0da;
+  --tv-ink: #1e293b;
+  --tv-slate: #334155;
+  --tv-muted: #64748b;
+  --tv-orange: #ea580c;
+  --tv-display: "Schibsted Grotesk", "Figtree", system-ui, sans-serif;
+}
+
+/* developer-facing connection badge: not something a user needs, and it named the wrong database */
+.db-status, #dbStatus { display: none !important; }
+
+/* stat cards: one flat panel style, the number leads, the icon is a quiet accent instead of a coloured tile */
+.stat-card, .stat-card.elevated {
+  background: #fff !important;
+  border: 1px solid var(--tv-line) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.stat-card .stat-icon, .stat-card .stat-icon.blue, .stat-card .stat-icon.green, .stat-card .stat-icon.purple,
+.stat-card .stat-icon.orange, .stat-card .stat-icon.red, .stat-card .stat-icon.yellow, .stat-card .stat-icon.teal {
+  background: transparent !important;
+  width: auto !important; height: auto !important;
+  color: var(--tv-orange) !important;
+  box-shadow: none !important;
+}
+.stat-card .stat-icon svg, .stat-card .stat-icon i { width: 1.25rem; height: 1.25rem; font-size: 1.25rem; color: var(--tv-orange) !important; }
+.stat-value { font-family: var(--tv-display); font-weight: 700; letter-spacing: -.02em; color: var(--tv-ink); }
+.stat-label { color: var(--tv-muted); font-size: .85rem; }
+
+/* every panel loses glow shadows; borders do the separating */
+[class*="card"], [class*="panel"] { box-shadow: none; }
+
+/* tables: readable density, quiet headers, no wrapping towers */
+table { font-size: .875rem; border-collapse: collapse; }
+table th { font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--tv-muted); white-space: nowrap; }
+table td { padding-block: .6rem; vertical-align: middle; }
+table td, table th { overflow-wrap: normal; word-break: normal; }
+table td { min-width: 4.5rem; }
+div:has(> table) { overflow-x: auto; }   /* a wide table scrolls inside its panel instead of being cut off */
+table tbody tr { border-bottom: 1px solid var(--tv-line); }
+table tbody tr:hover { background: color-mix(in srgb, var(--tv-orange) 4%, transparent); }
+
+/* long lists render the first rows only; "Show all" reveals the rest (see tv_polish.js) */
+tr.tv-more { display: none !important; }
+.tv-showall { display: block; margin: .75rem auto; padding: .5rem 1rem; border: 1px solid var(--tv-line); border-radius: 10px; background: #fff; color: var(--tv-slate); font-weight: 600; cursor: pointer; }
+.tv-showall:hover { border-color: #b9b6ad; }
+
+/* focus and motion */
+:focus-visible { outline: 2px solid var(--tv-orange); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* search fields: a real, readable width */
+.search-input-wrap { position: relative; flex: 1 1 18rem; max-width: 34rem; }
+.search-input { width: 100%; height: 2.6rem; padding: 0 .9rem 0 2.4rem; background: #fff; border: 1px solid #cfcdc6; border-radius: 10px; }
+.search-input:focus-visible { border-color: var(--tv-orange); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-orange) 20%, transparent); outline: none; }
+.search-input-icon { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%); color: var(--tv-muted); pointer-events: none; }

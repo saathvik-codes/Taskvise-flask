@@ -266,10 +266,10 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: none;
+    
+    -webkit-text-fill-color: currentColor;
+    
 }
 
 .page-subtitle {
@@ -347,7 +347,7 @@
 .progress-fill {
     height: 100%;
     border-radius: 4px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     transition: width 0.3s ease;
 }
 
@@ -430,19 +430,19 @@
 }
 
 .bar-fill.completed {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    background: #48bb78;
 }
 
 .bar-fill.in-progress {
-    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    background: #ed8936;
 }
 
 .bar-fill.pending {
-    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    background: #4299e1;
 }
 
 .bar-fill.overdue {
-    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    background: #f56565;
 }
 
 .bar-value {
@@ -501,15 +501,15 @@
 }
 
 .priority-item.high .priority-fill {
-    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    background: #f56565;
 }
 
 .priority-item.medium .priority-fill {
-    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    background: #ed8936;
 }
 
 .priority-item.low .priority-fill {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    background: #48bb78;
 }
 
 .priority-percent {
@@ -589,7 +589,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     color: white;
 }
 
