@@ -7,3 +7,9 @@ static/uploads/
 # user uploads and generated demo credentials never belong in git
 static/uploads/
 data/login_credentials.txt
+
+# local env and Next build output
+.env
+web/.env.local
+backend/data/
+data/

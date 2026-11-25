@@ -1,102 +1,60 @@
-# TaskVise – Intelligent Task & Workforce Management System
+# TaskVise
 
-TaskVise is a **Flask-based, role-driven task and workforce management system** designed to help organizations efficiently manage projects, tasks, employees, and workloads.  
-It simulates a real-world enterprise environment with **Managers, Team Leads, and Employees**, focusing on productivity, transparency, and balanced work distribution.
+Task, project, workload and leave management with a view for every role (admin, manager, HR, team lead, employee).
 
-This project is lightweight and portable for **academic projects, hackathons, and demonstrations**, with support for **CSV storage** and **MySQL backend**.
+```
+.
+├── web/                      Next.js 16 frontend (App Router, Tailwind 4)
+│   ├── app/(site)/           landing, sign-in, sign-up
+│   ├── app/(app)/[role]/     role dashboards: one route, a registry of views per role
+│   ├── components/views/     feature views (common.tsx, roles.tsx) and the registry (index.tsx)
+│   ├── components/           shell (sidebar, top bar), UI kit
+│   └── lib/                  API client, auth context, navigation per role
+├── backend/
+│   ├── taskvise/             Flask backend
+│   │   ├── core.py           app object, configuration, TiDB storage layer, shared helpers
+│   │   └── features/         one module per area; importing it registers its routes
+│   │       ├── auth.py          sign-in, sign-up, Google, /api/auth/*
+│   │       ├── employee_api.py  /api/employee/*  tasks, projects, leave, help, profile, settings, reports
+│   │       ├── manager_api.py   /api/manager/*, /api/task, /api/project
+│   │       ├── teamlead_api.py  /api/teamlead/*
+│   │       ├── admin_api.py     /api/admin/*, company management
+│   │       ├── notes_api.py     /api/notes
+│   │       ├── pages.py         legacy server-rendered pages (replaced by web/)
+│   │       └── system.py        health, static files, error handlers
+│   └── taskvise_admin/       platform-admin console (separate Flask app)
+├── templates/, static/       legacy pages and shared assets (illustrations, icons)
+├── api/index.py              Vercel entry for the Flask backend
+└── app.py                    local runner (python app.py)
+```
 
----
+## Data
 
-## Key Features
+TiDB Cloud (MySQL compatible) is the only data store. There is no file or MongoDB fallback.
+Set `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE` (a local `.env` works), plus `FLASK_SECRET`.
+The app refuses to start without them.
 
-- Secure authentication with role-based access
-- Multiple user roles (Manager, Team Lead, Employee)
-- Project creation and management
-- Task assignment and tracking
-- Workload balancing & monitoring
-- Skill-based task recommendations
-- Work time tracking
-- Leave management system
-- Team notes & announcements
-- Reports and productivity insights
+No accounts are baked into the code. A founder (platform admin) account exists only when
+`TASKVISE_FOUNDER_EMAIL` and `TASKVISE_FOUNDER_PASSWORD` are set. Demo data is created only when
+`TASKVISE_SEED_DEMO=1` (never on the hosted site).
 
----
+## Run locally
 
-## User Roles
+```
+pip install -r requirements.txt
+python app.py                      # Flask on :5000 (set PORT to change)
+cd web && npm install && FLASK_URL=http://127.0.0.1:5000 npm run dev
+```
 
-### 1. Manager
-- Create and manage projects
-- View overall workload distribution
-- Monitor employee productivity
-- Make data-driven decisions
+The browser only talks to the Next.js origin. `/api`, `/auth` and `/static` are proxied to Flask (see `web/next.config.ts`),
+so the session cookie lives on one domain. Set `FLASK_URL` to the deployed Flask URL in production.
 
-### 2. Team Lead
-- Assign and manage tasks
-- Track team progress
-- Coordinate project execution
+## Roles and what they see
 
-### 3. Employee
-- View assigned tasks
-- Update task status
-- Log working hours
-- Apply for leave
-
----
-
-## Tech Stack
-
-- **Backend:** Flask (Python)
-- **Frontend:** HTML, CSS, JavaScript (Jinja Templates)
-- **Storage:** CSV Files or MySQL
-- **Authentication:** Session-based login
-- **Security:** Password hashing (Werkzeug)
-
----
-
-## MySQL Setup
-
-TaskVise now supports MySQL as a storage backend.
-
-1. Install dependencies:
-   - `pip install -r requirements.txt`
-2. Set environment variables:
-   - `TASKVISE_DB_BACKEND=mysql`
-   - `MYSQL_HOST=127.0.0.1`
-   - `MYSQL_PORT=3306`
-   - `MYSQL_USER=root`
-   - `MYSQL_PASSWORD=your_password`
-   - `MYSQL_DATABASE=taskvise`
-3. Initialize schema (and optionally migrate CSV data):
-   - `python scripts/init_mysql.py`
-   - `python scripts/init_mysql.py --migrate-csv --truncate`
-
-Schema file: `database/mysql_schema.sql`
-
----
-
-## MongoDB Setup
-
-TaskVise now supports MongoDB backend (via `TASKVISE_DB_BACKEND=mongodb`).
-
-1. Set environment variables:
-   - `TASKVISE_DB_BACKEND=mongodb`
-   - `MONGO_URI=mongodb+srv://saathvikk777_db_user:<db_password>@taskvise.3ruihac.mongodb.net/?appName=Taskvise`
-   - `MONGO_DATABASE=taskvise`
-2. Migrate CSV to MongoDB:
-   - `python scripts/migrate_to_mongo.py`
-
-## Node.js Express Backend
-
-TaskVise also supports running a Node.js backend in parallel (does not replace Flask):
-
-1. Install dependencies:
-   - `npm install express cors mongoose csv-parser`
-2. Run server:
-   - `node server.js`
-3. API endpoints:
-   - `GET /api/users`, `GET /api/employees`, `GET /api/tasks`, `GET /api/projects`
-   - `POST /api/:model` (simple append functionality)
-   - `GET /node-status`
-
-
-
+| Role | Views |
+| --- | --- |
+| Employee | overview, tasks, projects, workload and help, leave, reports, notifications, profile, settings |
+| Team lead | overview, team, projects, tasks, reports, notifications, profile |
+| Manager | overview, team, projects, tasks, leave approvals, reports, notifications, profile |
+| HR | the manager views, framed around people and leave |
+| Admin | dashboard, employees, projects, tasks, settings |
