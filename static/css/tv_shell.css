@@ -1,7 +1,7 @@
 /* TaskVise app shell (all roles): brand + nav in an ink rail, slim top bar, scrolling workspace.
    The old navbar/sidebar markup is reused: .navbar and .nav-container become display:contents so the
    brand and actions land in the grid beside the sidebar. Desktop only; narrow screens keep the drawer. */
-:root { --rail: #1b2433; --rail-2: #263145; --rail-ink: #cbd5e1; --rail-line: #2f3b50; }
+:root { --rail: #fbfaf7; --rail-2: #f1efe9; --rail-ink: #475569; --rail-line: #e2e0da; }
 
 @media (min-width: 1024px) {
   html:has(.dashboard-container), body:has(.dashboard-container) { height: 100%; margin: 0; overflow: hidden; background: var(--tv-paper); }
@@ -12,7 +12,7 @@
   .navbar, .nav-container, .dashboard-layout { display: contents !important; position: static !important; }
 
   /* brand cell */
-  .nav-brand { grid-area: 1 / 1; display: flex; align-items: center; gap: .65rem; padding-inline: 1.25rem; background: var(--rail); border-bottom: 1px solid var(--rail-line); color: #fff; }
+  .nav-brand { grid-area: 1 / 1; display: flex; align-items: center; gap: .65rem; padding-inline: 1.25rem; background: var(--rail); border-bottom: 1px solid var(--rail-line); border-right: 1px solid var(--rail-line); color: #fff; }
   .nav-brand .brand-text { color: #fff !important; font: 700 1.15rem/1 var(--tv-display); letter-spacing: -.01em; }
 
   /* top bar */
@@ -20,25 +20,25 @@
   .nav-actions .nav-btn { border-radius: 10px; }
 
   /* rail */
-  .sidebar { grid-area: 2 / 1; position: static !important; width: auto !important; height: auto !important; top: auto !important; background: var(--rail) !important; border: 0 !important; color: var(--rail-ink); overflow-y: auto; padding: 0 .75rem 1rem; display: flex; flex-direction: column; gap: .5rem; }
+  .sidebar { grid-area: 2 / 1; position: static !important; width: auto !important; height: auto !important; top: auto !important; background: var(--rail) !important; border: 0 !important; border-right: 1px solid var(--rail-line) !important; color: var(--rail-ink); overflow-y: auto; padding: 0 .75rem 1rem; display: flex; flex-direction: column; gap: .5rem; }
   .sidebar.collapsed { width: auto !important; transform: none !important; }
   .sidebar-mobile-close, .sidebar-overlay, .menu-toggle { display: none !important; }
   .sidebar-header { padding: 1rem .5rem; border: 0 !important; background: transparent !important; }
   .sidebar .user-info { display: flex; align-items: center; gap: .75rem; }
   .sidebar .user-avatar { width: 2.5rem; height: 2.5rem; border-radius: 10px; background: var(--tv-orange) !important; color: #fff; display: grid; place-items: center; font-weight: 700; overflow: hidden; }
-  .sidebar .user-details h3 { color: #fff !important; font: 600 .95rem/1.2 var(--tv-display); margin: 0; }
-  .sidebar .user-details p { color: #94a3b8 !important; font-size: .8rem; margin: .1rem 0 0; }
+  .sidebar .user-details h3 { color: var(--tv-ink) !important; font: 600 .95rem/1.2 var(--tv-display); margin: 0; }
+  .sidebar .user-details p { color: var(--tv-muted) !important; font-size: .8rem; margin: .1rem 0 0; }
   .sidebar-nav { display: grid; gap: 2px; align-content: start; padding: 0; }
   .sidebar .nav-item, .sidebar .nav-subitem, .sidebar .nav-link { display: flex; align-items: center; gap: .7rem; min-height: 2.45rem; padding: 0 .75rem; border-radius: 8px; color: var(--rail-ink) !important; font-weight: 500; font-size: .92rem; text-decoration: none; background: transparent !important; border: 0 !important; box-shadow: none !important; }
   .sidebar .nav-item i, .sidebar .nav-subitem i { color: #94a3b8 !important; width: 1.1rem; text-align: center; }
-  .sidebar .nav-item:hover, .sidebar .nav-subitem:hover { background: rgba(255,255,255,.07) !important; color: #fff !important; }
-  .sidebar .nav-item.active, .sidebar .nav-subitem.active { background: rgba(234,88,12,.2) !important; color: #fff !important; font-weight: 600; box-shadow: inset 3px 0 0 var(--tv-orange) !important; }
+  .sidebar .nav-item:hover, .sidebar .nav-subitem:hover { background: var(--rail-2) !important; color: var(--tv-ink) !important; }
+  .sidebar .nav-item.active, .sidebar .nav-subitem.active { background: #ffedd5 !important; color: #9a3412 !important; font-weight: 600; box-shadow: none !important; }
   .sidebar .nav-item.active i { color: var(--tv-orange) !important; }
   .sidebar .nav-subitem { padding-left: 2.4rem; min-height: 2.1rem; font-size: .88rem; }
-  .sidebar .nav-badge, .sidebar .badge { margin-left: auto; background: var(--rail-2); color: #fff; border-radius: 6px; font-size: .72rem; padding: .05rem .45rem; }
+  .sidebar .nav-badge, .sidebar .badge { margin-left: auto; background: var(--rail-2); color: var(--tv-slate); border-radius: 6px; font-size: .72rem; padding: .05rem .45rem; }
   .sidebar .workload-indicator, .sidebar .sidebar-actions { margin-top: auto; background: var(--rail-2) !important; border: 1px solid var(--rail-line) !important; border-radius: 10px; padding: .75rem; color: var(--rail-ink); }
   .sidebar .workload-indicator * { color: inherit; }
-  .sidebar .workload-indicator strong, .sidebar .workload-level { background: transparent !important; color: #fff !important; }
+  .sidebar .workload-indicator strong { color: var(--tv-ink) !important; }
   .sidebar hr, .sidebar .dropdown-divider { border-color: var(--rail-line); }
 
   /* workspace */
@@ -61,8 +61,8 @@
 .content-header .header-title p { margin: .25rem 0 0; color: var(--tv-muted); font-size: .92rem; }
 
 /* detail fixes */
-.sidebar .workload-indicator [class*="level"], .sidebar .workload-indicator .workload-status, .sidebar .workload-indicator strong, .sidebar .workload-indicator span:first-of-type + * { background: transparent !important; color: #fdba74 !important; font-weight: 700; padding: 0 !important; text-transform: capitalize; }
-.sidebar .nav-item .fa-chevron-down, .sidebar .nav-item .chevron, .sidebar .nav-item .nav-arrow { margin-left: auto; font-size: .7rem; color: #64748b !important; }
+.sidebar .workload-indicator [class*="level"], .sidebar .workload-indicator .workload-status, .sidebar .workload-indicator strong, .sidebar .workload-indicator span:first-of-type + * { background: transparent !important; color: #c2410c !important; font-weight: 700; padding: 0 !important; text-transform: capitalize; }
+.sidebar .nav-item .fa-chevron-down, .sidebar .nav-item .chevron, .sidebar .nav-item .nav-arrow { margin-left: auto; font-size: .7rem; color: #94a3b8 !important; }
 .card-title, .card-header h2, .card-header h3 { border: 0 !important; padding: 0 !important; text-decoration: none; }
 .card-title::after, .card-title::before { display: none !important; }
 .stat-card { padding: 1rem 1.25rem !important; }
@@ -72,8 +72,8 @@
 .project-card, .project-item, .active-project { background: #fff !important; border: 1px solid var(--tv-line) !important; border-radius: 10px !important; }
 
 @media (min-width: 1024px) {
-  .sidebar .workload-status { background: transparent !important; color: #fdba74 !important; font-weight: 700; padding: 0 !important; margin: .35rem 0 .1rem; }
-  .sidebar .workload-message { color: #94a3b8 !important; font-size: .8rem; }
+  .sidebar .workload-status { background: transparent !important; color: #c2410c !important; font-weight: 700; padding: 0 !important; margin: .35rem 0 .1rem; }
+  .sidebar .workload-message { color: var(--tv-muted) !important; font-size: .8rem; }
   .sidebar-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
   .sidebar .sidebar-actions { flex: none; margin-top: .5rem; }
   .sidebar .sidebar-actions .btn { width: 100%; }
@@ -83,3 +83,39 @@
 .stats-grid:not(.compact) .stat-card .stat-icon { display: none !important; }
 .stats-grid:not(.compact) .stat-card, .stats-grid:not(.compact) .stat-content { text-align: left !important; display: grid; gap: .25rem; align-content: center; }
 .stats-grid:not(.compact) .stat-label { order: -1; text-align: left; }
+
+/* ---- finish: one consistent look ---- */
+@media (min-width: 1024px) {
+  .dashboard-container .nav-brand .brand-text { color: var(--tv-ink) !important; }
+}
+/* any run of metric cards becomes one connected strip */
+:is(div, section):has(> .summary-card), :is(div, section):has(> .stat-card):not(.compact) {
+  display: grid !important; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)) !important; gap: 1px !important;
+  background: var(--tv-line); border: 1px solid var(--tv-line); border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem;
+}
+.summary-card, .stat-card { background: #fff !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; padding: 1rem 1.25rem !important; display: grid; gap: .2rem; align-content: center; text-align: left; }
+.summary-label, .stat-label { order: -1; color: var(--tv-muted); font-size: .8rem; font-weight: 500; }
+.summary-value, .stat-value { font: 700 1.75rem/1.1 var(--tv-display); color: var(--tv-ink); }
+
+/* tables: compact single-line rows, actions inline */
+table td { padding-block: .55rem !important; font-size: .875rem; }
+table .user-avatar, table .avatar, table [class*="avatar"] { width: 2rem !important; height: 2rem !important; font-size: .75rem !important; border-radius: 8px !important; }
+.row-actions, td .actions, td .action-buttons { display: flex !important; flex-wrap: nowrap !important; gap: .4rem; align-items: center; }
+.btn-sm, .row-actions .btn { min-height: 2rem !important; padding: 0 .65rem !important; font-size: .8rem !important; border-radius: 8px !important; }
+.btn-primary.btn-sm { background: #fff !important; color: var(--tv-orange) !important; border-color: #fdba74 !important; }
+.btn-primary.btn-sm:hover { background: #fff7ed !important; }
+table td strong + *, table td small { color: var(--tv-muted); }
+.role-badge, td [class*="role-"] { background: #f1efe9 !important; color: var(--tv-slate) !important; }
+
+/* headings and spacing */
+.content-area > * + * { margin-top: 1.25rem; }
+.employee-toolbar, .project-toolbar, .toolbar { margin: 0; }
+.card, .panel, .table-card, .directory-card { margin: 0; }
+
+/* illustrations */
+.tv-empty-art { display: block; width: 9rem; height: auto; margin: 0 auto .75rem; object-fit: contain; }
+.content-header { display: flex; align-items: center; gap: 1rem; }
+.content-header .header-title { flex: 1 1 auto; min-width: 0; }
+.tv-header-art { width: 6.5rem; height: 5rem; object-fit: contain; margin-left: auto; order: 5; }
+@media (max-width: 760px) { .tv-header-art { display: none; } }
+@media (min-width: 1024px) { .main-content { background-image: url("../illustrations/tv-bg-tile.webp") !important; background-size: 22rem; } }

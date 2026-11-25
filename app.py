@@ -7422,6 +7422,13 @@ def save_taskvise_settings():
 def taskvise_admin_dashboard():
     return redirect(f"{TASKVISE_ADMIN_URL}/dashboard")
 
+@app.errorhandler(404)
+def not_found(_error):
+    if request.path.startswith('/api/') or request.path.startswith('/static/'):
+        return jsonify({'error': 'Not found'}), 404
+    return render_template('404.html'), 404
+
+
 if __name__ == '__main__':
     create_sample_users()
     ensure_demo_org_integrity(force=True)

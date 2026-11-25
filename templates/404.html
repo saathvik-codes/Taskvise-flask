@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Page not found - TaskVise</title>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Schibsted+Grotesk:wght@700&display=swap">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tv_landing.css') }}">
+<style>main{display:grid;justify-items:center;text-align:center;gap:1rem;padding:clamp(2rem,8vw,5rem) 1rem}main img{width:min(22rem,80vw)}</style></head>
+<body><main><img src="{{ url_for('static', filename='illustrations/tv-404.webp') }}" alt="" width="400" height="300"><h1 style="max-width:none">We could not find that page</h1><p style="color:#64748b">The link may be old or mistyped.</p><a class="btn btn-primary" href="{{ url_for('landing') }}">Back to TaskVise</a></main></body></html>
