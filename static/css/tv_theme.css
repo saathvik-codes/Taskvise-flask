@@ -96,7 +96,7 @@ input[type=checkbox], input[type=radio], input[type=range] { accent-color: var(-
 .btn-secondary:hover, .btn-outline:hover { border-color: #b9b6ad !important; }
 
 /* status chips and skill tags: calm, not neon */
-.badge, .tag, .skill-tag, .status-badge, [class*="badge-"], [class*="status-"] { border-radius: 6px; font-weight: 600; font-size: .75rem; padding: .15rem .55rem; }
+.badge, .tag, .skill-tag, .status-badge, [class*="badge-"] { border-radius: 6px; font-weight: 600; font-size: .75rem; padding: .15rem .55rem; }
 .skill-tag, .tag { background: #ffedd5 !important; color: #9a3412 !important; border: 0 !important; }
 
 /* tables */
