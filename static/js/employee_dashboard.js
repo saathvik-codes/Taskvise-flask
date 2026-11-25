@@ -82,7 +82,7 @@ function resolveThemeMode(theme) {
 function applyEmployeeTheme(theme = 'system') {
     const mode = String(theme || 'system').toLowerCase();
     const resolved = resolveThemeMode(mode);
-    document.documentElement.setAttribute('data-theme', resolved);
+    document.documentElement.setAttribute('data-theme', 'light');
     document.documentElement.setAttribute('data-theme-mode', mode);
     localStorage.setItem('taskvise_employee_theme', mode);
 }
@@ -1393,8 +1393,6 @@ function loadSettingsData() {
                         </div>
                         <select class="form-select" onchange="updateSetting('theme', this.value)">
                             <option value="light" ${settingsData.theme === 'light' ? 'selected' : ''}>Light</option>
-                            <option value="dark" ${settingsData.theme === 'dark' ? 'selected' : ''}>Dark</option>
-                            <option value="system" ${settingsData.theme === 'system' ? 'selected' : ''}>System</option>
                         </select>
                     </div>
                     

@@ -139,7 +139,7 @@ function setButtonLabel(selector, label) {
 function applyTeamLeadTheme(theme = 'system') {
   const mode = String(theme || 'system').toLowerCase();
   const resolved = resolveThemeMode(mode);
-  document.documentElement.setAttribute('data-theme', resolved);
+  document.documentElement.setAttribute('data-theme', 'light');
   document.documentElement.setAttribute('data-theme-mode', mode);
   localStorage.setItem('taskvise_teamlead_theme', mode);
 }
