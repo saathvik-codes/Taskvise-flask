@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { roleHome } from "@/lib/api";
@@ -13,7 +13,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(useSearchParams().get("error") || "");
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
@@ -42,7 +42,7 @@ export default function Login() {
                 <button type="button" aria-pressed={show} aria-label="Show or hide password" onClick={() => setShow((s) => !s)}>{show ? "Hide" : "Show"}</button></span></label>
             <button className="btn btn-primary" type="submit" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
             <div className="or">or</div>
-            <a className="btn btn-ghost" href="/auth/google"><GoogleMark />Continue with Google</a>
+            <a className="btn btn-ghost" href={`${process.env.NEXT_PUBLIC_FLASK_URL || ""}/auth/google`}><GoogleMark />Continue with Google</a>
           </form>
           <p className="switch">New here? <Link href="/signup">Create an account</Link></p>
         </section>

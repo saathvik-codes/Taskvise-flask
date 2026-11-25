@@ -76,7 +76,7 @@ export default function Signup() {
               <label className="field"><span>Phone</span><input type="tel" autoComplete="tel" placeholder="+91 98765 43210" required value={f.phone} onChange={(e) => set("phone", e.target.value)} /></label>
               <div className="actions"><button className="btn btn-primary" type="submit">Continue</button></div>
               <div className="or">or</div>
-              <a className="btn btn-ghost" href="/auth/google"><GoogleMark />Continue with Google</a>
+              <a className="btn btn-ghost" href={`${process.env.NEXT_PUBLIC_FLASK_URL || ""}/auth/google`}><GoogleMark />Continue with Google</a>
             </form>
           )}
           {step === 1 && (

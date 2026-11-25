@@ -42,7 +42,7 @@ from ..core import (
 @app.route('/auth/google')
 def google_login():
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-        return render_template('login.html', error='Google Sign-In is not configured.')
+        return _login_error('Google Sign-In is not configured.')
 
     redirect_uri = _google_redirect_uri()
     parsed_redirect = parse.urlparse(redirect_uri)
@@ -76,16 +76,16 @@ def google_login():
 @app.route('/auth/google/callback')
 def google_callback():
     if request.args.get('error'):
-        return render_template('login.html', error='Google Sign-In was cancelled or denied.')
+        return _login_error('Google Sign-In was cancelled or denied.')
 
     state = request.args.get('state', '')
     expected_state = session.pop('google_oauth_state', None)
     if not state or not expected_state or state != expected_state:
-        return render_template('login.html', error='Google Sign-In failed. Please try again.')
+        return _login_error('Google Sign-In failed. Please try again.')
 
     code = request.args.get('code')
     if not code:
-        return render_template('login.html', error='Google Sign-In failed. Missing authorization code.')
+        return _login_error('Google Sign-In failed. Missing authorization code.')
 
     try:
         redirect_uri = _google_redirect_uri()
@@ -108,7 +108,7 @@ def google_callback():
 
         access_token = token_data.get('access_token', '')
         if not access_token:
-            return render_template('login.html', error='Google Sign-In failed while getting access token.')
+            return _login_error('Google Sign-In failed while getting access token.')
 
         profile_request = urllib_request.Request(
             'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -119,7 +119,7 @@ def google_callback():
 
         email = (profile_data.get('email') or '').strip().lower()
         if not email:
-            return render_template('login.html', error='Google account email is unavailable.')
+            return _login_error('Google account email is unavailable.')
 
         users = read_csv(USERS_CSV)
         matched_user = next(
@@ -136,9 +136,10 @@ def google_callback():
                 'full_name': profile_data.get('name', ''),
                 'picture': profile_data.get('picture', '')
             }
-            return redirect(url_for('google_onboarding'))
+            return _hand_off_to_web('/onboarding') if WEB_URL else redirect(url_for('google_onboarding'))
 
-        return _start_user_session(matched_user)
+        _start_user_session(matched_user)
+        return _hand_off_to_web(_role_redirect_path())
     except urllib_error.HTTPError as e:
         body = ''
         try:
@@ -155,24 +156,24 @@ def google_callback():
         error_description = str(parsed.get('error_description') or '').strip()
         lower_body = body.lower()
         if 'invalid_client' in lower_body or error_code == 'invalid_client':
-            return render_template('login.html', error='Google OAuth client credentials are invalid. Recheck Client ID/Secret.')
+            return _login_error('Google OAuth client credentials are invalid. Recheck Client ID/Secret.')
         if 'redirect_uri_mismatch' in lower_body or error_code == 'redirect_uri_mismatch':
             return render_template(
                 'login.html',
                 error=f'Google redirect URI mismatch. Configure: {_google_redirect_uri()}'
             )
         if error_description:
-            return render_template('login.html', error=f'Google Sign-In failed: {error_description}')
-        return render_template('login.html', error='Google Sign-In is unavailable right now. Try email/password.')
+            return _login_error(f'Google Sign-In failed: {error_description}')
+        return _login_error('Google Sign-In is unavailable right now. Try email/password.')
     except urllib_error.URLError as e:
         reason = str(getattr(e, 'reason', '') or '').strip()
         print(f'Google OAuth URL error: {reason}')
         if reason:
-            return render_template('login.html', error=f'Google Sign-In network error: {reason}')
-        return render_template('login.html', error='Google Sign-In is unavailable right now. Try email/password.')
+            return _login_error(f'Google Sign-In network error: {reason}')
+        return _login_error('Google Sign-In is unavailable right now. Try email/password.')
     except Exception as e:
         print(f'Google OAuth error: {e}')
-        return render_template('login.html', error='Google Sign-In is unavailable right now. Try email/password.')
+        return _login_error('Google Sign-In is unavailable right now. Try email/password.')
 
 
 @app.route('/auth/google/onboarding', methods=['GET', 'POST'])
@@ -357,6 +358,99 @@ def show_credentials():
                          get_role_title=get_role_title,
                          get_role_description=get_role_description,
                          get_role_access_description=get_role_access_description)
+
+
+
+# ---- Next.js frontend hand-off ----
+# The Next.js app (TASKVISE_WEB_URL) is the user interface. Google sign-in finishes on this Flask host, so the signed-in session is
+# passed to the web origin with a short-lived signed token that /api/auth/handoff turns into a normal session cookie there.
+import os as _os
+from urllib.parse import quote as _quote
+from itsdangerous import BadSignature, URLSafeTimedSerializer
+
+WEB_URL = _os.environ.get('TASKVISE_WEB_URL', '').strip().rstrip('/')
+_HANDOFF_KEYS = ('user_id', 'username', 'role', 'full_name', 'email', 'last_login', 'join_date', 'google_profile')
+
+
+def _role_redirect_path():
+    return {'admin': '/admin/dashboard', 'manager': '/manager/overview', 'hr': '/hr/overview', 'teamlead': '/teamlead/overview'}.get(session.get('role'), '/employee/overview')
+
+
+def _hand_off_to_web(next_path):
+    if not WEB_URL:
+        return redirect(next_path)
+    payload = {k: session[k] for k in _HANDOFF_KEYS if k in session}
+    token = URLSafeTimedSerializer(app.secret_key, salt='tv-handoff').dumps(payload)
+    return redirect(f"{WEB_URL}/api/auth/handoff?t={_quote(token)}&next={_quote(next_path)}")
+
+
+def _login_error(message):
+    if WEB_URL:
+        return redirect(f"{WEB_URL}/login?error={_quote(message)}")
+    return render_template('login.html', error=message)
+
+
+@app.route('/api/auth/handoff')
+def api_auth_handoff():
+    try:
+        payload = URLSafeTimedSerializer(app.secret_key, salt='tv-handoff').loads(request.args.get('t', ''), max_age=120)
+    except BadSignature:
+        return redirect('/login?error=' + _quote('That sign-in link expired. Please try again.'))
+    session.clear()
+    session.update(payload)
+    nxt = request.args.get('next', '/')
+    return redirect(nxt if nxt.startswith('/') and not nxt.startswith('//') else '/')
+
+
+@app.route('/api/auth/google-profile')
+def api_auth_google_profile():
+    profile = session.get('google_profile')
+    if not profile:
+        return jsonify({'error': 'No Google sign-in in progress'}), 404
+    return jsonify({'profile': {'email': profile.get('email', ''), 'name': profile.get('full_name', ''), 'picture': profile.get('picture', '')}})
+
+
+@app.route('/api/auth/google-onboarding', methods=['POST'])
+def api_auth_google_onboarding():
+    profile = session.get('google_profile')
+    if not profile:
+        return jsonify({'error': 'Your Google sign-in expired. Please start again.'}), 400
+    data = request.get_json(silent=True) or {}
+    designation = str(data.get('designation') or '').strip()
+    department = str(data.get('department') or '').strip()
+    phone = str(data.get('phone') or '').strip()
+    skills = data.get('skills') or ''
+    if isinstance(skills, list):
+        skills = ', '.join(str(x).strip() for x in skills if str(x).strip())
+    if not (designation and department and str(skills).strip()):
+        return jsonify({'error': 'Designation, department and at least one skill are required'}), 400
+    users = read_csv(USERS_CSV)
+    email = profile.get('email', '')
+    if any(str(u.get('username', '')).strip().lower() == email for u in users):
+        session.pop('google_profile', None)
+        return jsonify({'error': 'An account with this email already exists. Sign in instead.'}), 409
+    new_id = get_next_workforce_id(users, read_csv(EMP_CSV))
+    now_text = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    user_row = {'id': new_id, 'username': email, 'password_hash': generate_password_hash(generate_secure_password()), 'full_name': profile.get('full_name', ''),
+                'role': 'employee', 'created_at': now_text, 'is_active': 'true'}
+    employee_row = {'id': new_id, 'name': profile.get('full_name', ''), 'email': email, 'position': designation, 'department': department,
+                    'company': get_default_company_name(), 'join_date': now_text, 'phone': phone, 'skills': skills, 'location': '', 'last_login': now_text,
+                    'password_last_changed': now_text, 'avatar_url': profile.get('picture', ''), 'status': 'active', 'productivity': '80'}
+    persist_workforce_profile(user_row, employee_row)
+    session.pop('google_profile', None)
+    _start_user_session(user_row)
+    return jsonify({'user': _session_user_payload()})
+
+
+@app.before_request
+def send_pages_to_web_app():
+    """Once the Next.js app is configured, the old server-rendered pages hand the visitor over to it."""
+    if not WEB_URL or request.method != 'GET':
+        return None
+    path = request.path
+    if path.startswith(('/api/', '/auth/', '/static/', '/taskvise-admin')):
+        return None
+    return redirect(f"{WEB_URL}{path}" + (f"?{request.query_string.decode()}" if request.query_string else ''))
 
 
 @app.route('/api/auth/me')
