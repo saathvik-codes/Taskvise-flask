@@ -17,17 +17,7 @@
   <script src="{{ url_for('static', filename='js/tv_polish.js') }}" defer></script>
 </head>
 <body>
-  <!-- Preloader -->
-  <div id="preloader" class="preloader">
-    <div class="preloader-inner">
-      <div class="loader-ring"></div>
-      <div class="loader-ring"></div>
-      <div class="loader-ring"></div>
-      <div class="preloader-text">Loading TaskVise...</div>
-    </div>
-  </div>
-
-  {% block content %}{% endblock %}
+{% block content %}{% endblock %}
   
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>

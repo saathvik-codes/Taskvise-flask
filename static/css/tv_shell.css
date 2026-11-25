@@ -4,7 +4,7 @@
 :root { --rail: #1b2433; --rail-2: #263145; --rail-ink: #cbd5e1; --rail-line: #2f3b50; }
 
 @media (min-width: 1024px) {
-  html, body { height: 100%; margin: 0; overflow: hidden; background: var(--tv-paper); }
+  html:has(.dashboard-container), body:has(.dashboard-container) { height: 100%; margin: 0; overflow: hidden; background: var(--tv-paper); }
   .dashboard-container {
     display: grid !important; grid-template-columns: 16.5rem minmax(0, 1fr); grid-template-rows: 3.75rem minmax(0, 1fr);
     height: 100dvh; margin: 0; background: var(--tv-paper); overflow: hidden;
