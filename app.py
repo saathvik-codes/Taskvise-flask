@@ -79,12 +79,14 @@ except Exception:
 
 DEFAULT_DB_BACKEND = "mongodb"
 if IS_VERCEL and "TASKVISE_DB_BACKEND" not in os.environ and not os.environ.get("MONGO_URI"):
-    DEFAULT_DB_BACKEND = "csv"
+    DEFAULT_DB_BACKEND = "mysql"  # production uses the database; CSV files are for local development only
 
 DB_BACKEND = os.environ.get(
     "TASKVISE_DB_BACKEND",
     DEFAULT_DB_BACKEND
 ).strip().lower()
+if IS_VERCEL and DB_BACKEND == "csv":
+    raise RuntimeError("CSV storage is not allowed in production. Set TASKVISE_DB_BACKEND=mysql and the MYSQL_* variables.")
 
 DEFAULT_MONGO_REQUIRED = "true"
 if DB_BACKEND != "mongodb" or (IS_VERCEL and not os.environ.get("MONGO_URI")):
@@ -237,9 +239,11 @@ STORAGE_TABLE_MAP = {
     TEAMS_CSV: "teams",
     PAYMENTS_CSV: "payments",
     TASK_SUBMISSIONS_CSV: "task_submissions",
+    HELP_REQUESTS_CSV: "help_requests",
 }
 
 MYSQL_DEFAULT_COLUMNS = {
+    "help_requests": ["id", "requester_id", "requester_name", "task_id", "task_title", "message", "urgency", "status", "recipient_type", "recipient_id", "recipient_name", "request_type", "created_at", "updated_at"],
     "users": ["id", "username", "password_hash", "full_name", "role", "created_at", "is_active"],
     "employees": ["id", "name", "email", "position", "department", "company", "join_date", "phone", "skills", "location", "last_login", "password_last_changed", "avatar_url", "status", "productivity"],
     "tasks": ["id", "title", "description", "project_id", "assignee_id", "assignee_name", "status", "priority", "created_at", "due_date", "estimated_hours", "actual_hours", "progress"],
@@ -276,6 +280,8 @@ _MONGO_ENABLED = MongoClient is not None
 _MYSQL_BOOTSTRAPPED = False
 
 if DB_BACKEND == "mysql" and mysql is None:
+    if IS_VERCEL:
+        raise RuntimeError("mysql-connector-python is not installed; CSV storage is not allowed in production.")
     print("mysql-connector-python is not installed. Falling back to CSV storage.")
 
 if DB_BACKEND == "mongodb" and MongoClient is None:
@@ -650,7 +656,9 @@ def _mysql_bootstrap():
         _MYSQL_BOOTSTRAPPED = True
         return True
     except Exception as exc:
-        print(f"MySQL unavailable ({exc}). Falling back to CSV storage.")
+        if IS_VERCEL:
+            raise RuntimeError(f"MySQL/TiDB is unavailable in production: {exc}") from exc
+        print(f"MySQL unavailable ({exc}). Falling back to CSV storage (local development only).")
         _MYSQL_ENABLED = False
         return False
 
