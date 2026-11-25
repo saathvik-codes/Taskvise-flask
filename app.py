@@ -799,7 +799,10 @@ TASK_SUBMISSION_FIELDNAMES = ['id', 'task_id', 'project_id', 'employee_id', 'emp
 VALID_LEAVE_STATUSES = {'pending', 'approved', 'rejected'}
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
+app.secret_key = os.environ.get("FLASK_SECRET") or os.environ.get("FLASK_SECRET_KEY") or "dev-secret"
+if IS_VERCEL and app.secret_key == "dev-secret":
+    # a known fallback key would let anyone forge a login cookie
+    raise RuntimeError("Set FLASK_SECRET to a long random value in production.")
 
 GOOGLE_CLIENT_ID = os.environ.get(
     "GOOGLE_CLIENT_ID",
